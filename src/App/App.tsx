@@ -1,6 +1,27 @@
-import React, { useState } from 'react';
+import React, { Fragment, FunctionComponent, useState } from 'react';
 import ReactDOM from 'react-dom';
 
+type Props = {
+  createArrayForCalendar: (year: number, month: number) => [number, number, number, number, number, number, number][];
+};
+
+export const CalendarBoard: React.FunctionComponent<Props> = (props: Props) => {
+  // [WIP]いったんベタ打ちで日付を入れておく
+  const calendar = props.createArrayForCalendar(2021, 7);
+  return (
+    <Fragment>
+      <table>
+        {calendar.map(() => {
+          calendar.map((day) => {
+            return day;
+          });
+        })}
+      </table>
+    </Fragment>
+  );
+};
+
+// [TODO]本当はReact.VFCで型を定義したいが、エラーになるのでいったん放置している。。
 export const CalendarCalculator = () => {
   // 該当月が何日間ある月なのかを返す関数
   const determineDaysInTheMonth = (year: number, month: number) => {
@@ -60,9 +81,8 @@ export const CalendarCalculator = () => {
         weeksArray.push(oneWeek);
       }
     }
+    return weeksArray;
   };
-
-  return <div className='calendarCalculator'></div>;
 };
 
-ReactDOM.render(<CalendarCalculator />, document.getElementById('root'));
+ReactDOM.render(<CalendarBoard />, document.getElementById('root'));
