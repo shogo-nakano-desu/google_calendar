@@ -1,32 +1,31 @@
 import React, { Fragment, useState } from 'react';
 import ReactDOM from 'react-dom';
+// type Props = {
+//   createArrayForCalendar: (year: number, month: number) => [number, number, number, number, number, number, number][];
+// };
 
-type Props = {
-  createArrayForCalendar: (year: number, month: number) => [number, number, number, number, number, number, number][];
-};
-
-export const CalendarBoard: React.VFC<Props> = (props: Props) => {
-  // [WIP]いったんベタ打ちで日付を入れておく
-  const calendar = props.createArrayForCalendar(2021, 7);
-  return (
-    <Fragment>
-      <table>
-        <tbody>
-          {calendar.map((week, i) => {
-            <tr key={week.join('')}>
-              {calendar.map((day, j) => {
-                <th key={`${i}${j}`}>{day}</th>;
-              })}
-            </tr>;
-          })}
-        </tbody>
-      </table>
-    </Fragment>
-  );
-};
+// export const CalendarBoard: React.VFC<Props> = (props: Props) => {
+//   // [WIP]いったんベタ打ちで日付を入れておく
+//   const calendar = props.createArrayForCalendar(2021, 7);
+//   return (
+//     <Fragment>
+//       <table>
+//         <tbody>
+//           {calendar.map((week, i) => {
+//             <tr key={week.join('')}>
+//               {calendar.map((day, j) => {
+//                 <th key={`${i}${j}`}>{day}</th>;
+//               })}
+//             </tr>;
+//           })}
+//         </tbody>
+//       </table>
+//     </Fragment>
+//   );
+// };
 
 // [TODO]本当はReact.VFCで型を定義したいが、エラーになるのでいったん放置している。。
-export const CalendarCalculator = () => {
+const CalendarCalculator = () => {
   // 該当月が何日間ある月なのかを返す関数
   const determineDaysInTheMonth = (year: number, month: number) => {
     return new Date(year, month, 0).getDate();
@@ -60,6 +59,7 @@ export const CalendarCalculator = () => {
   // カレンダーの配列を生成する関数
   const createArrayForCalendar = (year: number, month: number) => {
     // 最初に全て０で埋めておかないと、ループを回す際にコンパイルエラーになるため。
+    console.log('そもそも関数動いている？');
     let oneWeek: [number, number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0, 0];
     let weeksArray: [number, number, number, number, number, number, number][] = [];
 
@@ -70,7 +70,9 @@ export const CalendarCalculator = () => {
       // 最初の週か、翌週以降かで処理を分ける
       // 最初の週
       if (i === 0) {
+        console.log('first week calc');
         for (let t = firstDay; t < 7; t++) {
+          console.log(`firstDay is ${firstDay} now`);
           oneWeek[t] = t + 1;
           dateculc += 1;
         }
@@ -87,6 +89,25 @@ export const CalendarCalculator = () => {
     }
     return weeksArray;
   };
+
+  const calendar = createArrayForCalendar(2021, 7);
+  return (
+    <Fragment>
+      <table>
+        <tbody>
+          {calendar.map((week, i) => {
+            <tr key={week.join('')}>
+              {calendar.map((day, j) => {
+                <th key={`${i}${j}`}>{day}</th>;
+              })}
+            </tr>;
+          })}
+        </tbody>
+      </table>
+    </Fragment>
+  );
 };
 
-ReactDOM.render(<CalendarBoard />, document.getElementById('root'));
+ReactDOM.render(<CalendarCalculator />, document.getElementById('root'));
+
+export default CalendarCalculator;
