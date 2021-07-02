@@ -1,21 +1,25 @@
-import React, { Fragment, FunctionComponent, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 type Props = {
   createArrayForCalendar: (year: number, month: number) => [number, number, number, number, number, number, number][];
 };
 
-export const CalendarBoard: React.FunctionComponent<Props> = (props: Props) => {
+export const CalendarBoard: React.VFC<Props> = (props: Props) => {
   // [WIP]いったんベタ打ちで日付を入れておく
   const calendar = props.createArrayForCalendar(2021, 7);
   return (
     <Fragment>
       <table>
-        {calendar.map(() => {
-          calendar.map((day) => {
-            return day;
-          });
-        })}
+        <tbody>
+          {calendar.map((week, i) => {
+            <tr key={week.join('')}>
+              {calendar.map((day, j) => {
+                <th key={`${i}${j}`}>{day}</th>;
+              })}
+            </tr>;
+          })}
+        </tbody>
       </table>
     </Fragment>
   );
