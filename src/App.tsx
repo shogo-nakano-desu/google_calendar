@@ -1,32 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import ReactDOM from 'react-dom';
-
-type Props = {
-  createArrayForCalendar: (year: number, month: number) => [number, number, number, number, number, number, number][];
-};
-
-export const CalendarBoard: React.VFC<Props> = (props: Props) => {
-  // [WIP]いったんベタ打ちで日付を入れておく
-  const calendar = props.createArrayForCalendar(2021, 7);
-  return (
-    <Fragment>
-      <table>
-        <tbody>
-          {calendar.map((week, i) => {
-            <tr key={week.join('')}>
-              {calendar.map((day, j) => {
-                <th key={`${i}${j}`}>{day}</th>;
-              })}
-            </tr>;
-          })}
-        </tbody>
-      </table>
-    </Fragment>
-  );
-};
 
 // [TODO]本当はReact.VFCで型を定義したいが、エラーになるのでいったん放置している。。
-export const CalendarCalculator = () => {
+const CalendarCalculator = () => {
   // 該当月が何日間ある月なのかを返す関数
   const determineDaysInTheMonth = (year: number, month: number) => {
     return new Date(year, month, 0).getDate();
@@ -65,12 +40,15 @@ export const CalendarCalculator = () => {
 
     // １日が何曜日かチェックするための関数
     const firstDay: number = new Date(year, month, 1).getDay();
+    console.log(`firstDay（2021/07だと４のはず）: ${firstDay}`);
     let dateculc: number = 1;
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
       // 最初の週か、翌週以降かで処理を分ける
       // 最初の週
       if (i === 0) {
+        console.log('first week calc');
         for (let t = firstDay; t < 7; t++) {
+          console.log(`firstDay is ${firstDay} now`);
           oneWeek[t] = t + 1;
           dateculc += 1;
         }
@@ -78,6 +56,7 @@ export const CalendarCalculator = () => {
         weeksArray.push(oneWeek);
         // ２週目以降
       } else {
+        console.log(`2週目以降の計算${firstDay}`);
         for (let t = 0; t < 7; t++) {
           oneWeek[t] = dateculc;
           dateculc += 1;
@@ -87,6 +66,24 @@ export const CalendarCalculator = () => {
     }
     return weeksArray;
   };
+
+  const calendar = createArrayForCalendar(2021, 7);
+  console.log(calendar);
+  return (
+    <Fragment>
+      <table>
+        <tbody>
+          {calendar.map((week, i) => {
+            <tr key={week.join('')}>
+              {calendar.map((day, j) => {
+                <th key={`${i}${j}`}>{day}</th>;
+              })}
+            </tr>;
+          })}
+        </tbody>
+      </table>
+    </Fragment>
+  );
 };
 
-ReactDOM.render(<CalendarBoard />, document.getElementById('root'));
+export default CalendarCalculator;
