@@ -39,7 +39,8 @@ const CalendarCalculator = () => {
     let weeksArray: [number, number, number, number, number, number, number][] = [];
 
     // １日が何曜日かチェックするための関数
-    const firstDay: number = new Date(year, month, 1).getDay();
+    const firstDay: number = new Date(year, month - 1, 1).getDay();
+    // firstDayの問題は解けた。
     console.log(`firstDay（2021/07だと４のはず）: ${firstDay}`);
     let dateculc: number = 1;
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
@@ -48,22 +49,30 @@ const CalendarCalculator = () => {
       if (i === 0) {
         console.log('first week calc');
         for (let t = firstDay; t < 7; t++) {
-          console.log(`firstDay is ${firstDay} now`);
-          oneWeek[t] = t + 1;
-          dateculc += 1;
-        }
-        // [TODO]配列の中で０が格納されている箇所に対して、前の月の日付を入れていく必要がある
-        weeksArray.push(oneWeek);
-        // ２週目以降
-      } else {
-        console.log(`2週目以降の計算${firstDay}`);
-        for (let t = 0; t < 7; t++) {
+          console.log(`t is ${t} now`);
           oneWeek[t] = dateculc;
           dateculc += 1;
         }
+        // [TODO]配列の中で０が格納されている箇所に対して、前の月の日付を入れていく必要がある
+        console.log('誤作動チェック');
         weeksArray.push(oneWeek);
+        console.log(`1週目が終わったときのweeksArray: ${weeksArray}`);
+        // ２週目以降
+      } else {
+        console.log(`${i + 1}週目の計算スタート`);
+        console.log(`weeksArrayチェック：${weeksArray}`);
+        for (let t = 0; t < 7; t++) {
+          oneWeek[t] = dateculc;
+          console.log(`oneWeek[${t}]: ${oneWeek[t]}`);
+          dateculc += 1;
+        }
+        console.log(`${i + 1}週目が終わったときのoneWeek: ${oneWeek}`);
+        console.log(`${i + 1}週目が終わって、pushする前のweeksArray${weeksArray}`);
+        weeksArray.push(oneWeek);
+        console.log(`${i + 1}週目が終わって、pushした後のweeksArray${weeksArray}`);
       }
     }
+    console.log(weeksArray);
     return weeksArray;
   };
 
