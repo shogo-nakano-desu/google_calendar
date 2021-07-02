@@ -1,28 +1,4 @@
 import React, { Fragment, useState } from 'react';
-import ReactDOM from 'react-dom';
-// type Props = {
-//   createArrayForCalendar: (year: number, month: number) => [number, number, number, number, number, number, number][];
-// };
-
-// export const CalendarBoard: React.VFC<Props> = (props: Props) => {
-//   // [WIP]いったんベタ打ちで日付を入れておく
-//   const calendar = props.createArrayForCalendar(2021, 7);
-//   return (
-//     <Fragment>
-//       <table>
-//         <tbody>
-//           {calendar.map((week, i) => {
-//             <tr key={week.join('')}>
-//               {calendar.map((day, j) => {
-//                 <th key={`${i}${j}`}>{day}</th>;
-//               })}
-//             </tr>;
-//           })}
-//         </tbody>
-//       </table>
-//     </Fragment>
-//   );
-// };
 
 // [TODO]本当はReact.VFCで型を定義したいが、エラーになるのでいったん放置している。。
 const CalendarCalculator = () => {
@@ -59,12 +35,12 @@ const CalendarCalculator = () => {
   // カレンダーの配列を生成する関数
   const createArrayForCalendar = (year: number, month: number) => {
     // 最初に全て０で埋めておかないと、ループを回す際にコンパイルエラーになるため。
-    console.log('そもそも関数動いている？');
     let oneWeek: [number, number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0, 0];
     let weeksArray: [number, number, number, number, number, number, number][] = [];
 
     // １日が何曜日かチェックするための関数
     const firstDay: number = new Date(year, month, 1).getDay();
+    console.log(`firstDay（2021/07だと４のはず）: ${firstDay}`);
     let dateculc: number = 1;
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
       // 最初の週か、翌週以降かで処理を分ける
@@ -80,6 +56,7 @@ const CalendarCalculator = () => {
         weeksArray.push(oneWeek);
         // ２週目以降
       } else {
+        console.log(`2週目以降の計算${firstDay}`);
         for (let t = 0; t < 7; t++) {
           oneWeek[t] = dateculc;
           dateculc += 1;
@@ -91,6 +68,7 @@ const CalendarCalculator = () => {
   };
 
   const calendar = createArrayForCalendar(2021, 7);
+  console.log(calendar);
   return (
     <Fragment>
       <table>
@@ -107,7 +85,5 @@ const CalendarCalculator = () => {
     </Fragment>
   );
 };
-
-ReactDOM.render(<CalendarCalculator />, document.getElementById('root'));
 
 export default CalendarCalculator;
