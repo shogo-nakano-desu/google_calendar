@@ -2,18 +2,21 @@ import React, { Fragment, useState } from 'react';
 import { Navigation } from './Navigation';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { convertToObject } from 'typescript';
 
 // [TODO]本当はReact.VFCで型を定義したいが、エラーになるのでいったん放置している。。
 export const CalendarCalculator = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  console.log(month);
   const ArrowBack = () => {
     const handleClickBack = () => {
       if (month === 1) {
         setMonth(12);
         setYear(year - 1);
+      } else {
+        setMonth(month - 1);
       }
-      setMonth(month - 1);
     };
     return (
       <button onClick={() => handleClickBack()}>
