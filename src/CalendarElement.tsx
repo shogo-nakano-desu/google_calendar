@@ -1,7 +1,50 @@
 import React, { Fragment, useState } from 'react';
+import { Navigation } from './Navigation';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 // [TODO]本当はReact.VFCで型を定義したいが、エラーになるのでいったん放置している。。
-const CalendarCalculator = () => {
+export const CalendarCalculator = () => {
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const ArrowBack = () => {
+    const handleClickBack = () => {
+      if (month === 1) {
+        setMonth(12);
+        setYear(year - 1);
+      }
+      setMonth(month - 1);
+    };
+    return (
+      <button onClick={() => handleClickBack()}>
+        <ArrowBackIosIcon />
+      </button>
+    );
+  };
+
+  const ArrowForward = () => {
+    const handleClickForward = () => {
+      if (month === 12) {
+        setMonth(1);
+        setYear(year + 1);
+      } else {
+        setMonth(month + 1);
+      }
+    };
+    return (
+      <button onClick={() => handleClickForward()}>
+        <ArrowForwardIosIcon />
+      </button>
+    );
+  };
+
+  const DateNav = () => {
+    return (
+      <div>
+        {year}年{month}月
+      </div>
+    );
+  };
   // 該当月が何日間ある月なのかを返す関数
   const determineDaysInTheMonth = (year: number, month: number) => {
     return new Date(year, month, 0).getDate();
@@ -115,25 +158,39 @@ const CalendarCalculator = () => {
     return weeksArray;
   };
 
-  const calendar = createArrayForCalendar(2021, 4);
+  // [TODO]stateで管理しているyear, monthを入れることができるようにする。
+  const calendar = createArrayForCalendar(year, month);
   console.log(`実行時のcalendar: ${calendar}`);
   console.log(`実行時のcalculateNumberOfWeeks: ${calculateNumberOfWeeks(2021, 4)}`);
   // 今は２次元配列をそのまま展開しようとしているが、flatで１次元配列にして、７個ずつ描画するでもいけるかも
 
   return (
-    <Fragment>
-      <table>
-        <tbody>
-          {calendar.map((week, i) => (
-            <tr key={week.join('')}>
-              {week.map((day, j) => (
-                <th key={`${i}${j}`}>{day}</th>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Fragment>
+    <div>
+      <div>
+        <span>
+          <ArrowBack />
+        </span>
+        <span>
+          <ArrowForward />
+        </span>
+        <div>
+          <DateNav />
+        </div>
+      </div>
+      <Fragment>
+        <table>
+          <tbody>
+            {calendar.map((week, i) => (
+              <tr key={week.join('')}>
+                {week.map((day, j) => (
+                  <th key={`${i}${j}`}>{day}</th>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Fragment>
+    </div>
   );
 };
 
