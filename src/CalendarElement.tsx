@@ -45,15 +45,15 @@ const CalendarCalculator = () => {
     // １日が何曜日かチェックするための関数
     const firstDay: number = new Date(year, month - 1, 1).getDay();
 
-    let dateCulc: number = 1;
+    let dateCalc: number = 1;
 
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
       // 最初の週か、翌週以降かで処理を分ける
       // 最初の週
       if (i === 0) {
         for (let t = firstDay; t < 7; t++) {
-          oneWeek[t] = dateCulc;
-          dateCulc += 1;
+          oneWeek[t] = dateCalc;
+          dateCalc += 1;
         }
         // [TODO]配列の中で０が格納されている箇所に対して、前の月の日付を入れていく必要がある
         weeksArray.push(oneWeek);
@@ -62,50 +62,50 @@ const CalendarCalculator = () => {
       } else if (i === 1) {
         let weekTwo: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
-          weekTwo[t] = dateCulc;
-          dateCulc += 1;
+          weekTwo[t] = dateCalc;
+          dateCalc += 1;
         }
         weeksArray.push(weekTwo);
       } else if (i === 2) {
         let weekThree: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
-          weekThree[t] = dateCulc;
-          dateCulc += 1;
+          weekThree[t] = dateCalc;
+          dateCalc += 1;
         }
         weeksArray.push(weekThree);
       } else if (i === 3) {
         let weekFour: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
-          weekFour[t] = dateCulc;
-          dateCulc += 1;
+          weekFour[t] = dateCalc;
+          dateCalc += 1;
         }
         weeksArray.push(weekFour);
       } else if (i === 4) {
         let weekFive: Week = [0, 0, 0, 0, 0, 0, 0];
         if (calculateNumberOfWeeks(year, month) === 5) {
-          console.log(`weekFiveでのdateCulc: ${dateCulc}`);
+          console.log(`weekFiveでのdateCalc: ${dateCalc}`);
           // [TODO このループおかしい。日付の計算ややこしくしすぎたかも]
-          const lastDateCulc = dateCulc;
-          for (let t = 0; t < determineDaysInTheMonth(year, month) - lastDateCulc + 1; t++) {
+          const lastdateCalc = dateCalc;
+          for (let t = 0; t < determineDaysInTheMonth(year, month) - lastdateCalc + 1; t++) {
             console.log(`${month}月は${determineDaysInTheMonth(year, month)}日間`);
-            console.log(`${t + 1}週目のlastDateCulcの値：${lastDateCulc}`);
-            weekFive[t] = dateCulc;
-            dateCulc += 1;
+            console.log(`${t + 1}週目のlastdateCalcの値：${lastdateCalc}`);
+            weekFive[t] = dateCalc;
+            dateCalc += 1;
           }
         } else {
           for (let t = 0; t < 7; t++) {
-            weekFive[t] = dateCulc;
-            dateCulc += 1;
+            weekFive[t] = dateCalc;
+            dateCalc += 1;
           }
         }
         weeksArray.push(weekFive);
       } else if (i === 5) {
         let weekSix: Week = [0, 0, 0, 0, 0, 0, 0];
         // [TODO このループおかしい。日付の計算ややこしくしすぎたかも]
-        const lastDateCulc = dateCulc;
-        for (let t = 0; t < determineDaysInTheMonth(year, month) - lastDateCulc + 1; t++) {
-          weekSix[t] = dateCulc;
-          dateCulc += 1;
+        const lastdateCalc = dateCalc;
+        for (let t = 0; t < determineDaysInTheMonth(year, month) - lastdateCalc + 1; t++) {
+          weekSix[t] = dateCalc;
+          dateCalc += 1;
         }
         weeksArray.push(weekSix);
       } else {
