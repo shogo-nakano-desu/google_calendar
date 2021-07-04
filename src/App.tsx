@@ -56,7 +56,6 @@ const CalendarCalculator = () => {
         weeksArray.push(oneWeek);
         console.log(`1週目が終わったときのweeksArray: ${weeksArray}`);
         // ２週目以降
-        // 2週目の時
       } else if (i === 1) {
         let weekTwo: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
@@ -101,17 +100,19 @@ const CalendarCalculator = () => {
 
   const calendar = createArrayForCalendar(2021, 7);
   console.log(calendar);
+  // 今は２次元配列をそのまま展開しようとしているが、flatで１次元配列にして、７個ずつ描画するでもいけるかも
+
   return (
     <Fragment>
       <table>
         <tbody>
-          {calendar.map((week, i) => {
+          {calendar.map((week, i) => (
             <tr key={week.join('')}>
-              {calendar.map((day, j) => {
-                <th key={`${i}${j}`}>{day}</th>;
-              })}
-            </tr>;
-          })}
+              {week.map((day, j) => (
+                <th key={`${i}${j}`}>{day}</th>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </Fragment>
