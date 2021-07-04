@@ -9,8 +9,11 @@ const CalendarCalculator = () => {
 
   // １ヶ月の中に何個の配列があればいいのか計算するための関数
   const calculateNumberOfWeeks = (year: number, month: number): number => {
-    const firstDay: number = new Date(year, month, 1).getDay();
+    // 日曜０、月曜１、・・・土曜６
+    const firstDay: number = new Date(year, month - 1, 1).getDay(); // 1日の曜日
+    console.log(`firstDay : ${firstDay}`);
     // 条件分岐で書くコードを簡潔にするために切り出した関数
+    // 1ヶ月が何週間あるのか判定する
     const weekNumCalc = (firstWeekNum: number) => {
       return Math.ceil((determineDaysInTheMonth(year, month) - firstWeekNum) / 7) + 1;
     };
@@ -42,15 +45,15 @@ const CalendarCalculator = () => {
     // １日が何曜日かチェックするための関数
     const firstDay: number = new Date(year, month - 1, 1).getDay();
 
-    let dateculc: number = 1;
+    let dateCulc: number = 1;
 
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
       // 最初の週か、翌週以降かで処理を分ける
       // 最初の週
       if (i === 0) {
         for (let t = firstDay; t < 7; t++) {
-          oneWeek[t] = dateculc;
-          dateculc += 1;
+          oneWeek[t] = dateCulc;
+          dateCulc += 1;
         }
         // [TODO]配列の中で０が格納されている箇所に対して、前の月の日付を入れていく必要がある
         weeksArray.push(oneWeek);
@@ -59,36 +62,50 @@ const CalendarCalculator = () => {
       } else if (i === 1) {
         let weekTwo: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
-          weekTwo[t] = dateculc;
-          dateculc += 1;
+          weekTwo[t] = dateCulc;
+          dateCulc += 1;
         }
         weeksArray.push(weekTwo);
       } else if (i === 2) {
         let weekThree: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
-          weekThree[t] = dateculc;
-          dateculc += 1;
+          weekThree[t] = dateCulc;
+          dateCulc += 1;
         }
         weeksArray.push(weekThree);
       } else if (i === 3) {
         let weekFour: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
-          weekFour[t] = dateculc;
-          dateculc += 1;
+          weekFour[t] = dateCulc;
+          dateCulc += 1;
         }
         weeksArray.push(weekFour);
       } else if (i === 4) {
         let weekFive: Week = [0, 0, 0, 0, 0, 0, 0];
-        for (let t = 0; t < 7; t++) {
-          weekFive[t] = dateculc;
-          dateculc += 1;
+        if (calculateNumberOfWeeks(year, month) === 5) {
+          console.log(`weekFiveでのdateCulc: ${dateCulc}`);
+          // [TODO このループおかしい。日付の計算ややこしくしすぎたかも]
+          const lastDateCulc = dateCulc;
+          for (let t = 0; t < determineDaysInTheMonth(year, month) - lastDateCulc + 1; t++) {
+            console.log(`${month}月は${determineDaysInTheMonth(year, month)}日間`);
+            console.log(`${t + 1}週目のlastDateCulcの値：${lastDateCulc}`);
+            weekFive[t] = dateCulc;
+            dateCulc += 1;
+          }
+        } else {
+          for (let t = 0; t < 7; t++) {
+            weekFive[t] = dateCulc;
+            dateCulc += 1;
+          }
         }
         weeksArray.push(weekFive);
       } else if (i === 5) {
         let weekSix: Week = [0, 0, 0, 0, 0, 0, 0];
-        for (let t = 0; t < 7; t++) {
-          weekSix[t] = dateculc;
-          dateculc += 1;
+        // [TODO このループおかしい。日付の計算ややこしくしすぎたかも]
+        const lastDateCulc = dateCulc;
+        for (let t = 0; t < determineDaysInTheMonth(year, month) - lastDateCulc + 1; t++) {
+          weekSix[t] = dateCulc;
+          dateCulc += 1;
         }
         weeksArray.push(weekSix);
       } else {
@@ -98,8 +115,9 @@ const CalendarCalculator = () => {
     return weeksArray;
   };
 
-  const calendar = createArrayForCalendar(2021, 7);
-  console.log(calendar);
+  const calendar = createArrayForCalendar(2021, 4);
+  console.log(`実行時のcalendar: ${calendar}`);
+  console.log(`実行時のcalculateNumberOfWeeks: ${calculateNumberOfWeeks(2021, 4)}`);
   // 今は２次元配列をそのまま展開しようとしているが、flatで１次元配列にして、７個ずつ描画するでもいけるかも
 
   return (
