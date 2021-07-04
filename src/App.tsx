@@ -35,44 +35,67 @@ const CalendarCalculator = () => {
   // カレンダーの配列を生成する関数
   const createArrayForCalendar = (year: number, month: number) => {
     // 最初に全て０で埋めておかないと、ループを回す際にコンパイルエラーになるため。
-    let oneWeek: [number, number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0, 0];
-    let weeksArray: [number, number, number, number, number, number, number][] = [];
+    type Week = [number, number, number, number, number, number, number];
+    let oneWeek: Week = [0, 0, 0, 0, 0, 0, 0];
+    let weeksArray: Week[] = [];
 
     // １日が何曜日かチェックするための関数
     const firstDay: number = new Date(year, month - 1, 1).getDay();
-    // firstDayの問題は解けた。
-    console.log(`firstDay（2021/07だと４のはず）: ${firstDay}`);
+
     let dateculc: number = 1;
+
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
       // 最初の週か、翌週以降かで処理を分ける
       // 最初の週
       if (i === 0) {
-        console.log('first week calc');
         for (let t = firstDay; t < 7; t++) {
-          console.log(`t is ${t} now`);
           oneWeek[t] = dateculc;
           dateculc += 1;
         }
         // [TODO]配列の中で０が格納されている箇所に対して、前の月の日付を入れていく必要がある
-        console.log('誤作動チェック');
         weeksArray.push(oneWeek);
         console.log(`1週目が終わったときのweeksArray: ${weeksArray}`);
         // ２週目以降
-      } else {
-        console.log(`${i + 1}週目の計算スタート`);
-        console.log(`weeksArrayチェック：${weeksArray}`);
+        // 2週目の時
+      } else if (i === 1) {
+        let weekTwo: Week = [0, 0, 0, 0, 0, 0, 0];
         for (let t = 0; t < 7; t++) {
-          oneWeek[t] = dateculc;
-          console.log(`oneWeek[${t}]: ${oneWeek[t]}`);
+          weekTwo[t] = dateculc;
           dateculc += 1;
         }
-        console.log(`${i + 1}週目が終わったときのoneWeek: ${oneWeek}`);
-        console.log(`${i + 1}週目が終わって、pushする前のweeksArray${weeksArray}`);
-        weeksArray.push(oneWeek);
-        console.log(`${i + 1}週目が終わって、pushした後のweeksArray${weeksArray}`);
+        weeksArray.push(weekTwo);
+      } else if (i === 2) {
+        let weekThree: Week = [0, 0, 0, 0, 0, 0, 0];
+        for (let t = 0; t < 7; t++) {
+          weekThree[t] = dateculc;
+          dateculc += 1;
+        }
+        weeksArray.push(weekThree);
+      } else if (i === 3) {
+        let weekFour: Week = [0, 0, 0, 0, 0, 0, 0];
+        for (let t = 0; t < 7; t++) {
+          weekFour[t] = dateculc;
+          dateculc += 1;
+        }
+        weeksArray.push(weekFour);
+      } else if (i === 4) {
+        let weekFive: Week = [0, 0, 0, 0, 0, 0, 0];
+        for (let t = 0; t < 7; t++) {
+          weekFive[t] = dateculc;
+          dateculc += 1;
+        }
+        weeksArray.push(weekFive);
+      } else if (i === 5) {
+        let weekSix: Week = [0, 0, 0, 0, 0, 0, 0];
+        for (let t = 0; t < 7; t++) {
+          weekSix[t] = dateculc;
+          dateculc += 1;
+        }
+        weeksArray.push(weekSix);
+      } else {
+        console.log(new Error());
       }
     }
-    console.log(weeksArray);
     return weeksArray;
   };
 
