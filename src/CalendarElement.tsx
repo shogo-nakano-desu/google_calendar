@@ -2,13 +2,47 @@ import React, { Fragment, useState } from 'react';
 import { Navigation } from './Navigation';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import { convertToObject } from 'typescript';
+
+// 曜日要素をレンダーするための関数を作成
+// [TODO]全体を通してだが、スタイリングは後からまとめてやる必要あり
+const CreateDays: React.VFC = () => {
+  const gridSize = {
+    width: '14.2857%',
+    height: 'auto',
+    padding: '0px',
+  };
+  return (
+    <>
+      <li style={gridSize}>
+        <div>日</div>
+      </li>
+      <li style={gridSize}>
+        <div>月</div>
+      </li>
+      <li style={gridSize}>
+        <div>火</div>
+      </li>
+      <li style={gridSize}>
+        <div>水</div>
+      </li>
+      <li style={gridSize}>
+        <div>木</div>
+      </li>
+      <li style={gridSize}>
+        <div>金</div>
+      </li>
+      <li style={gridSize}>
+        <div>土</div>
+      </li>
+    </>
+  );
+};
 
 // [TODO]本当はReact.VFCで型を定義したいが、エラーになるのでいったん放置している。。
 export const CalendarCalculator = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
-  console.log(month);
+
   const ArrowBack = () => {
     const handleClickBack = () => {
       if (month === 1) {
@@ -129,12 +163,8 @@ export const CalendarCalculator = () => {
       } else if (i === 4) {
         let weekFive: Week = [0, 0, 0, 0, 0, 0, 0];
         if (calculateNumberOfWeeks(year, month) === 5) {
-          console.log(`weekFiveでのdateCalc: ${dateCalc}`);
-          // [TODO このループおかしい。日付の計算ややこしくしすぎたかも]
           const lastdateCalc = dateCalc;
           for (let t = 0; t < determineDaysInTheMonth(year, month) - lastdateCalc + 1; t++) {
-            console.log(`${month}月は${determineDaysInTheMonth(year, month)}日間`);
-            console.log(`${t + 1}週目のlastdateCalcの値：${lastdateCalc}`);
             weekFive[t] = dateCalc;
             dateCalc += 1;
           }
@@ -147,7 +177,6 @@ export const CalendarCalculator = () => {
         weeksArray.push(weekFive);
       } else if (i === 5) {
         let weekSix: Week = [0, 0, 0, 0, 0, 0, 0];
-        // [TODO このループおかしい。日付の計算ややこしくしすぎたかも]
         const lastdateCalc = dateCalc;
         for (let t = 0; t < determineDaysInTheMonth(year, month) - lastdateCalc + 1; t++) {
           weekSix[t] = dateCalc;
@@ -158,13 +187,12 @@ export const CalendarCalculator = () => {
         console.log(new Error());
       }
     }
+    console.log(`2021/07/06の配列をテスト${weeksArray[1][2]}`);
     return weeksArray;
   };
 
-  // [TODO]stateで管理しているyear, monthを入れることができるようにする。
   const calendar = createArrayForCalendar(year, month);
-  console.log(`実行時のcalendar: ${calendar}`);
-  console.log(`実行時のcalculateNumberOfWeeks: ${calculateNumberOfWeeks(2021, 4)}`);
+
   // 今は２次元配列をそのまま展開しようとしているが、flatで１次元配列にして、７個ずつ描画するでもいけるかも
 
   return (
@@ -179,6 +207,12 @@ export const CalendarCalculator = () => {
         <div>
           <DateNav />
         </div>
+      </div>
+      <div>
+        {/* <ul> ここでグリッドをかく */}
+        <ul>
+          <CreateDays />
+        </ul>
       </div>
       <Fragment>
         <table>

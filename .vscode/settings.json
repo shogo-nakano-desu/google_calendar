@@ -1,9 +1,11 @@
 {
     "git.ignoreLimitWarning": true,
     "cSpell.words": [
+        "calc",
         "culc",
         "date",
         "dateculc",
-        "last"
+        "last",
+        "lastdate"
     ]
 }
