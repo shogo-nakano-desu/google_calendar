@@ -42,6 +42,21 @@ const CreateDays: React.VFC = () => {
 export const CalendarCalculator = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  const [weeksArray, setWeeksArray] = useState<WeeksArray>([]);
+  type ScheduleMetadata = {
+    title: string;
+    place: string;
+    description: string;
+  };
+  interface ScheduleModel<T = ScheduleMetadata> {
+    year: number;
+    month: number;
+    day: number;
+    schedules: Array<T>;
+  }
+
+  type Week = [ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel];
+  type WeeksArray = Week[];
 
   const ArrowBack = () => {
     const handleClickBack = () => {
@@ -51,6 +66,7 @@ export const CalendarCalculator = () => {
       } else {
         setMonth(month - 1);
       }
+      setWeeksArray([]);
     };
     return (
       <button onClick={() => handleClickBack()}>
@@ -67,6 +83,7 @@ export const CalendarCalculator = () => {
       } else {
         setMonth(month + 1);
       }
+      setWeeksArray([]);
     };
     return (
       <button onClick={() => handleClickForward()}>
@@ -117,30 +134,6 @@ export const CalendarCalculator = () => {
 
   // カレンダーの配列を生成する関数
   const createArrayForCalendar = (year: number, month: number) => {
-    // 最初に全て０で埋めておかないと、ループを回す際にコンパイルエラーになるため。
-    type ScheduleMetadata = {
-      title: string;
-      place: string;
-      description: string;
-    };
-    interface ScheduleModel<T = ScheduleMetadata> {
-      year: number;
-      month: number;
-      day: number;
-      schedules: Array<T>;
-    }
-
-    type Week = [
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel
-    ];
-    type WeeksArray = Week[];
-
     let schedule: ScheduleModel = {
       year: year,
       month: month,
@@ -153,7 +146,6 @@ export const CalendarCalculator = () => {
         },
       ],
     };
-    // let oneWeek: Week = [0, 0, 0, 0, 0, 0, 0];
     let oneWeek: Week = [
       { ...schedule },
       { ...schedule },
@@ -163,12 +155,17 @@ export const CalendarCalculator = () => {
       { ...schedule },
       { ...schedule },
     ];
-    let weeksArray: WeeksArray = [];
+    // let weeksArray: WeeksArray = [];
 
     // １日が何曜日かチェックするための関数
     const firstDay: number = new Date(year, month - 1, 1).getDay();
 
     let dateCalc: number = 1;
+
+    const addWeek = (weekNum: Week) => {
+      weeksArray.push(weekNum);
+      return weeksArray;
+    };
 
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
       // 最初の週か、翌週以降かで処理を分ける
@@ -270,7 +267,8 @@ export const CalendarCalculator = () => {
         console.log(new Error());
       }
     }
-    console.log(`2021/07/06の配列をテスト${weeksArray[1][2]}`);
+    // console.log(`2021/07/06の配列をテスト${weeksArray[1][2]}`);
+    () => setWeeksArray(weeksArray);
     return weeksArray;
   };
 
