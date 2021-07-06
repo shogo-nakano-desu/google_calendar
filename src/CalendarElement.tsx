@@ -130,16 +130,6 @@ export const CalendarCalculator = () => {
       schedules: Array<T>;
     }
 
-    // type ScheduleModel = {
-    //   year: number;
-    //   month: number;
-    //   day: number;
-    //   schedule: {
-    //     title: string;
-    //     place: string;
-    //     description: string;
-    //   };
-    // };
     type Week = [
       ScheduleModel,
       ScheduleModel,
@@ -307,7 +297,7 @@ export const CalendarCalculator = () => {
         </ul>
       </div>
       <Fragment>
-        <table>
+        {/* <table>
           <tbody>
             {calendar.map((week, i) => (
               <tr key={week.join('')}>
@@ -317,7 +307,8 @@ export const CalendarCalculator = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
+        {calendar.map((week, i) => week.map((day, j) => <li key={`${i}${j}`}>{day.day}</li>))}
       </Fragment>
     </div>
   );
