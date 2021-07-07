@@ -2,6 +2,210 @@ import React, { Fragment, useState } from 'react';
 import { Navigation } from './Navigation';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import CloseIcon from '@material-ui/icons/Close';
+import PlaceIcon from '@material-ui/icons/Place';
+import NotesIcon from '@material-ui/icons/Notes';
+import styled from 'styled-components';
+import getWeekOfMonth from 'date-fns/getWeekOfMonth';
+import getDay from 'date-fns/getDay';
+
+// [TODO]スタイリングはこれからやる必要あり。。。
+export const AddScheduleDialog = (props: any) => {
+  type FormModel = {
+    title: string;
+    year: number;
+    month: number;
+    day: number;
+    place: string;
+    description: string;
+  };
+  const formInit: FormModel = {
+    title: '',
+    year: 0, // デフォルトでクリックした日付を入れるようにしたい
+    month: 0,
+    day: 0,
+    place: '',
+    description: '',
+  };
+
+  const [input, setInput] = useState<FormModel>(formInit);
+  // formの内容を全部一気にweeksArrayに突っ込むようの関数。保存buttonと一緒に使う
+  const registerForm = () => {
+    // targetDateは2021年7月7日のようなデータが入っている
+    // 以下でまずは年月日を別々に取得して、inputに突っ込む用意
+    const targetDate: string = document.getElementById('addScheduleDate')!.innerText;
+    const year = parseInt(targetDate.match(/[0-9]{4}/)![0]);
+    const month = parseInt(targetDate.match(/(?<!.{5})[0-9]{1,}/)![0]);
+    const day = parseInt(targetDate.match(/[0-9]{1,}(?=日)/)![0]);
+    // inputに取得したデータを入れていく
+    input.year = year;
+    input.month = month;
+    input.day = day;
+    setInput(input);
+
+    // 年月日からその日がn週目のなかで、m日目なのかを判定
+    const determineWeekIndex = getWeekOfMonth(new Date(year, month - 1, day)); // n
+    const determineDayIndex = getDay(new Date(year, month - 1, day)); // m
+    const formInput = {
+      title: input.title,
+      place: input.place,
+      description: input.description,
+    };
+    props.weeksArray[determineWeekIndex][determineDayIndex].schedules.push(formInput);
+    () => props.setWeeksArray(props.weeksArray);
+    // 最後に初期化するために処理
+    setInput(formInit);
+  };
+
+  const SpaceAndDelete = () => {
+    return (
+      <div>
+        <div>
+          <button>
+            <span>
+              <CloseIcon />
+            </span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const AddScheduleTitle = () => {
+    return (
+      <div>
+        <input
+          placeholder='タイトルと日時を追加'
+          type='text'
+          className='MuiInputBase-input MuiInput-input'
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            input.title = e.target.value;
+            setInput(input);
+          }}
+        />
+      </div>
+    );
+  };
+
+  // [TODO]日付はカレンダーから常に選ぶようになっている。
+  // 日付をクリックすると、小さいカレンダーが出てきて選べるように。
+  // 小さいカレンダーは大きなカレンダーと同じものを使えばよさそう。見た目をちょっと変えるだけ
+  // readOnly要素をつけて読み取り専用にする。そしてどこかをいじって選択しているセルのyear, monthをとってくるようにする
+  const AddScheduleDate = () => {
+    return (
+      <div>
+        <div>
+          <AccessTimeIcon />
+        </div>
+        <div>
+          <div>
+            <div>
+              <input
+                id='addScheduleDate'
+                className='MuiInputBase-input MuiInput-input'
+                aria-invalid='false'
+                type='text'
+                readOnly
+                value='2021年7月7日'
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const AddSchedulePlace = () => {
+    return (
+      <div>
+        <div>
+          <PlaceIcon />
+        </div>
+        <div>
+          <div>
+            <div>
+              <input
+                aria-invalid='false'
+                placeholder='場所を追加'
+                type='text'
+                className='MuiInputBase-input MuiInput-input'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  input.place = e.target.value;
+                  setInput(input);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const AddScheduleDescription = () => {
+    return (
+      <div>
+        <div>
+          <NotesIcon />
+        </div>
+        <div>
+          <div>
+            <div>
+              <input
+                aria-invalid='false'
+                placeholder='説明を追加'
+                type='text'
+                className='MuiInputBase-input MuiInput-input'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  input.description = e.target.value;
+                  setInput(input);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const SpaceAndSave = () => {
+    return (
+      <div>
+        <button
+          className='MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary'
+          tabIndex={0}
+          type='button'
+          onClick={() => registerForm}
+        >
+          <span className='MuiButton-label'>保存</span>
+          <span className='MuiTouchRipple-root'></span>
+        </button>
+      </div>
+    );
+  };
+
+  return (
+    <div className='MuiDialog-root' style={{ position: 'fixed', zIndex: 1300, inset: '0px' }}>
+      <div className='MuiBackdrop-root' aria-hidden='true'>
+        <div className='MuiDialog-container MuiDialog-scrollPaper' role='none presentation'>
+          <div>
+            <SpaceAndDelete />
+          </div>
+          <div>
+            <AddScheduleTitle />
+            <AddScheduleDate />
+            <AddSchedulePlace />
+            <AddScheduleDescription />
+          </div>
+          <div>
+            <SpaceAndSave />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // 曜日要素をレンダーするための関数を作成
 // [TODO]全体を通してだが、スタイリングは後からまとめてやる必要あり
@@ -42,6 +246,21 @@ const CreateDays: React.VFC = () => {
 export const CalendarCalculator = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  const [weeksArray, setWeeksArray] = useState<WeeksArray>([]);
+  type ScheduleMetadata = {
+    title: string;
+    place: string;
+    description: string;
+  };
+  interface ScheduleModel<T = ScheduleMetadata> {
+    year: number;
+    month: number;
+    day: number;
+    schedules: Array<T>;
+  }
+
+  type Week = [ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel, ScheduleModel];
+  type WeeksArray = Week[];
 
   const ArrowBack = () => {
     const handleClickBack = () => {
@@ -51,6 +270,7 @@ export const CalendarCalculator = () => {
       } else {
         setMonth(month - 1);
       }
+      setWeeksArray([]);
     };
     return (
       <button onClick={() => handleClickBack()}>
@@ -67,6 +287,7 @@ export const CalendarCalculator = () => {
       } else {
         setMonth(month + 1);
       }
+      setWeeksArray([]);
     };
     return (
       <button onClick={() => handleClickForward()}>
@@ -117,30 +338,6 @@ export const CalendarCalculator = () => {
 
   // カレンダーの配列を生成する関数
   const createArrayForCalendar = (year: number, month: number) => {
-    // 最初に全て０で埋めておかないと、ループを回す際にコンパイルエラーになるため。
-    type ScheduleMetadata = {
-      title: string;
-      place: string;
-      description: string;
-    };
-    interface ScheduleModel<T = ScheduleMetadata> {
-      year: number;
-      month: number;
-      day: number;
-      schedules: Array<T>;
-    }
-
-    type Week = [
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel,
-      ScheduleModel
-    ];
-    type WeeksArray = Week[];
-
     let schedule: ScheduleModel = {
       year: year,
       month: month,
@@ -153,7 +350,6 @@ export const CalendarCalculator = () => {
         },
       ],
     };
-    // let oneWeek: Week = [0, 0, 0, 0, 0, 0, 0];
     let oneWeek: Week = [
       { ...schedule },
       { ...schedule },
@@ -163,12 +359,17 @@ export const CalendarCalculator = () => {
       { ...schedule },
       { ...schedule },
     ];
-    let weeksArray: WeeksArray = [];
+    // let weeksArray: WeeksArray = [];
 
     // １日が何曜日かチェックするための関数
     const firstDay: number = new Date(year, month - 1, 1).getDay();
 
     let dateCalc: number = 1;
+
+    const addWeek = (weekNum: Week) => {
+      weeksArray.push(weekNum);
+      return weeksArray;
+    };
 
     for (let i = 0; i < calculateNumberOfWeeks(year, month); i++) {
       // 最初の週か、翌週以降かで処理を分ける
@@ -270,7 +471,8 @@ export const CalendarCalculator = () => {
         console.log(new Error());
       }
     }
-    console.log(`2021/07/06の配列をテスト${weeksArray[1][2]}`);
+    // console.log(`2021/07/06の配列をテスト${weeksArray[1][2]}`);
+    () => setWeeksArray(weeksArray);
     return weeksArray;
   };
 
