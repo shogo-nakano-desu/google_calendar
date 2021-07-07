@@ -30,6 +30,7 @@ export const AddScheduleDialog = (props: any) => {
   };
 
   const [input, setInput] = useState<FormModel>(formInit);
+
   // formの内容を全部一気にweeksArrayに突っ込むようの関数。保存buttonと一緒に使う
   const registerForm = () => {
     // targetDateは2021年7月7日のようなデータが入っている
@@ -176,7 +177,7 @@ export const AddScheduleDialog = (props: any) => {
           className='MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary'
           tabIndex={0}
           type='button'
-          onClick={() => registerForm}
+          onClick={() => registerForm()}
         >
           <span className='MuiButton-label'>保存</span>
           <span className='MuiTouchRipple-root'></span>
